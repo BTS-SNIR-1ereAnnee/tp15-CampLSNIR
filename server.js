@@ -4,12 +4,48 @@ const app = express()
 const fs = require("fs")
 const path = require("path");
 
+const mariadb = require('mariadb');
+
+const pool = mariadb.createPool({
+     host: '192.168.1.50', 
+     user:'bts', 
+     password: 'snir',
+     connectionLimit: 5,
+     database: "bts_tutorial"
+});
+
+
+async function Mesures() {
+	return new Promise(async function(resolve, reject) {
+  		let conn;
+  		try {
+			conn = await pool.getConnection();
+			let rows = await conn.query("SELECT * FROM Mesures ORDER BY ID DESC LIMIT 1");
+			resolve( rows )
+		
+  		} catch (err) {
+			reject(err ) ;
+  		}
+  	})
+}
+
 
 
 app.get('/', function (req, res) {
 	res.type('text/html; charset=utf-8');
   	res.sendFile( path.join(__dirname + '/www/template.html') )
 
+})
+
+app.get('/data.json', async function (req, res) {
+	res.type('text/html; charset=utf-8');
+  	res.send( await Mesures() )
+
+})
+
+app.get('/style.css', function (req, res) {
+	res.type('text/css; charset=utf-8');
+  	res.sendFile( path.join(__dirname + '/www/style.css') )
 })
 
 app.get('/style.css', function (req, res) {
@@ -23,7 +59,7 @@ app.get('/images/*', function (req, res) {
 
 	res.type('text/css; charset=utf-8');
   	res.sendFile( path.join(__dirname + '/www/images/' + file) )
-  	
+
 })
 
 app.get('*', function (req, res) {
