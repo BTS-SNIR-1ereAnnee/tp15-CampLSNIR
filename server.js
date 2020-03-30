@@ -23,12 +23,13 @@ Connect()
 
 console.log( pool )
 
-async function Mesures() {
+async function Mesures( limit ) {
 	return new Promise(async function(resolve, reject) {
   		let conn;
+  		limit = limit || 1
   		try {
 			conn = await pool.getConnection();
-			let rows = await conn.query("SELECT * FROM Mesures ORDER BY ID DESC LIMIT 1");
+			let rows = await conn.query("SELECT * FROM Mesures ORDER BY ID DESC LIMIT " + limit);
 			resolve( rows )
 		
   		} catch (err) {
@@ -52,6 +53,15 @@ app.get('/data.json', async function (req, res) {
 	res.type('text/html; charset=utf-8');
 	lastmesure = (await Mesures()) || lastmesure
   	res.send( lastmesure )
+
+})
+
+var lastmesure10 = {}
+
+app.get('/chart.json', async function (req, res) {
+	res.type('text/html; charset=utf-8');
+	lastmesure10 = (await Mesures( 10 )) || lastmesure10
+  	res.send( lastmesure10 )
 
 })
 
