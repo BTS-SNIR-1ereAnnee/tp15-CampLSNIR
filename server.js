@@ -6,14 +6,22 @@ const path = require("path");
 
 const mariadb = require('mariadb');
 
-const pool = mariadb.createPool({
-     host: '192.168.1.50', 
-     user:'bts', 
-     password: 'snir',
-     connectionLimit: 5,
-     database: "bts_tutorial"
-});
 
+var pool
+
+async function Connect(){
+	pool = await mariadb.createPool({
+   		host: '192.168.1.50', 
+   		user:'bts', 
+   		password: 'snir',
+   		connectionLimit: 5,
+   		database: "bts_tutorial"
+	});
+}
+
+Connect()
+
+console.log( pool )
 
 async function Mesures() {
 	return new Promise(async function(resolve, reject) {
@@ -24,6 +32,7 @@ async function Mesures() {
 			resolve( rows )
 		
   		} catch (err) {
+  			Connect()
 			reject(err ) ;
   		}
   	})
@@ -37,9 +46,12 @@ app.get('/', function (req, res) {
 
 })
 
+var lastmesure = {}
+
 app.get('/data.json', async function (req, res) {
 	res.type('text/html; charset=utf-8');
-  	res.send( await Mesures() )
+	lastmesure = (await Mesures()) || lastmesure
+  	res.send( lastmesure )
 
 })
 

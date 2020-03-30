@@ -14,6 +14,7 @@ async function GetData() {
 			              data = JSON.parse(maLigne);
 			              resolve( data )
 			            }catch (e) {
+			            	reject( date )
 			              console.error("Erreur d'analyse du JSON :", e);
 			            }
 			
@@ -31,10 +32,22 @@ async function GetData() {
 }
 
 async function Start() {
+	console.log( "ok" )
+	let obj = await GetData()
 
-	console.log( await GetData() )
+	obj = obj[0]
+	console.log( obj )
+
+	document.querySelector("#temperature").innerText  = obj.degres
+	console.log( obj.degres )
+	document.querySelector("#humidite").innerText  = obj.humidie
+	document.querySelector("#pression").innerText  = obj.pression
 
 }
 
 
 Start()
+
+document.querySelector("#actualiser").addEventListener("click", function(){ 
+    Start()
+})
