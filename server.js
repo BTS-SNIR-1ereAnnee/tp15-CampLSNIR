@@ -48,9 +48,9 @@ app.get('/style.css', function (req, res) {
   	res.sendFile( path.join(__dirname + '/www/style.css') )
 })
 
-app.get('/style.css', function (req, res) {
-	res.type('text/css; charset=utf-8');
-  	res.sendFile( path.join(__dirname + '/www/style.css') )
+app.get('/script.js', function (req, res) {
+	res.type('text/javascript; charset=utf-8');
+  	res.sendFile( path.join(__dirname + '/www/script.js') )
 })
 
 app.get('/images/*', function (req, res) {
