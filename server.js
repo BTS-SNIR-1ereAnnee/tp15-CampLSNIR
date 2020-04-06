@@ -51,8 +51,6 @@ function Generate( num ){
 
 async function Mesures( limit ) {
 	return new Promise(async function(resolve, reject) {
-
-		console.log( "Mesures" )
   		let conn;
   		limit = limit || 1
   		try {
