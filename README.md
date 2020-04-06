@@ -2,6 +2,7 @@
 
 ```
 npm i express
+npm i mariadb
 ```
 
 # lancer le serveur
